@@ -1,5 +1,4 @@
-import pygame
-from pygame.sprite import Sprite, Group
+кмвсівмвімвмвіііііишовимразшмлі ирвмщтивмщштізамившозьлстоа щошзліьтоущошмзщлсхьлст овіозшщлх ваьлташо щхльклтшзоіщхлмьдлтвзшіощхльултлмаощвхльілтшоущахльвлтзшіощхвь                                            import Sprite, Group
 import random
 from pygame import font
 
@@ -42,41 +41,7 @@ class Player(GameSprite):
             return
 #рух гравця
         self.speed_x = 0
-        keystate = pygame.key.get_pressed()
-        if keystate[pygame.K_LEFT]:
-            self.speed_x = -5
-        if keystate[pygame.K_RIGHT]:
-            self.speed_x = 5
-        self.rect.x += self.speed_x
 
-        if self.rect.left < 0:
-            self.rect.left = 0
-        if self.rect.right > win_width:
-            self.rect.right = win_width
-
-        # Взаємодія з ворогами
-        self.collide_with_enemy(enemies)
-
-    def collide_with_enemy(self, enemies_group):
-        if not self.alive:
-            return
-
-        collisions = pygame.sprite.spritecollide(self, enemies_group, True)
-        for enemy in collisions:
-            self.lives -= 1
-            if self.lives <= 0:
-                self.alive = False
-            else:
-                self.rect.x = random.randrange(win_width - self.rect.width)
-                self.rect.y = win_height - 80
-#Постріл
-    def shoot(self):
-        bullet1 = Bullet(self.rect.centerx - 45, self.rect.top)
-        bullet2 = Bullet(self.rect.centerx - 9, self.rect.top)
-        self.bullets.add(bullet1, bullet2)
-        all_sprites.add(bullet1, bullet2)
-
-class Enemy(GameSprite):
     def __init__(self, player_image, player_x, player_y, player_speed):
         super().__init__(player_image, player_x, player_y, player_speed)
         self.speed_y = random.randrange(1, 5)
@@ -146,21 +111,6 @@ background = pygame.transform.scale(pygame.image.load("kosmos.jpg"), (win_width,
 # Додаємо гравця
 player = Player('PLAYER.png', 5, win_height - 80, 4)
 
-game = True
-clock = pygame.time.Clock()
-FPS = 60
-# Створення групи
-all_sprites = pygame.sprite.Group()
-enemies = pygame.sprite.Group()
-enemy_bullets = pygame.sprite.Group()
-
-enemy_spawn_threshold_1 = 50
-enemy_spawn_threshold_2 = 100
-is_difficulty_1_spawned = False
-is_difficulty_2_spawned = False
-
-finish = False
-game = True
 
 # Основний цикл
 while game:
@@ -201,18 +151,7 @@ while game:
 
     for enemy_bullet in enemy_bullets:
         enemy_bullet.update()
-        if pygame.sprite.spritecollide(player, enemy_bullets, True):
-            player.lives -= 1
 
-    # Куля
-    for bullet in player.bullets:
-        bullet.update()
-        if bullet.collide_with_enemy(enemies):
-            score += 1
-
-    player.bullets.draw(window)
-    all_sprites.update()
-    all_sprites.draw(window)
     all_sprites.add(enemy_bullets)
     enemy_bullets.add(enemy_bullets)
 
@@ -220,7 +159,4 @@ while game:
         game_over_text = font1.render("Гра завершена!", True, (255, 0, 0))
         window.blit(game_over_text, (
         win_width // 2 - game_over_text.get_width() // 2, win_height // 2 - game_over_text.get_height() // 2))
-    pygame.display.update()
-    clock.tick(FPS)
 
-pygame.quit()
